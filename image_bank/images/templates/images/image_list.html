@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image List</title>
+</head>
+<body>
+    <a href="{% url 'upload_image' %}">Ajouter une image</a>
+    <h1>Image List</h1>
+    <ul>
+        {% if no_images %}
+            <p>Pas d'images ajoutées.</p>
+        {% else %}
+            {% for image in images %}
+                <li>
+                    <p>Original Name: {{ image.original_name }}</p>
+                    <p>Generated Name: {{ image.generated_name }}</p>
+                    <p>Tags: {% for tag in image.tags.all %}{{ tag.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+                    <img src="{{ image.image_url}}" alt="{{ image.original_name }}">
+                </li>
+            {% endfor %}
+        {% endif %}
+    </ul>
+</body>
+</html>
