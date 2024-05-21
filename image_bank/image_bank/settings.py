@@ -133,6 +133,10 @@ USE_TZ = True
 
 STATIC_URL = os.environ.get("BLOB_SECRET_URL")
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+ALLOWED_HOSTS = [
+    os.environ.get("URL_SERVER_NAME"),
+    "localhost"
+]
 
 
 # Default primary key field type
