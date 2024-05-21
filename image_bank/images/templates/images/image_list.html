@@ -2,23 +2,131 @@
 <html>
 <head>
     <title>Image List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        header {
+            width: 100%;
+            background-color: #333;
+            padding: 10px;
+            color: #fff;
+            text-align: center;
+        }
+        .container {
+            width: 90%; /* Ajustement pour une largeur légèrement plus grande */
+            max-width: 1200px;
+            background: #fff;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        li {
+            width: calc(30% - 20px);
+            margin: 10px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        li:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+        }
+        p {
+            margin: 0;
+            color: #666; /* Couleur de texte grise */
+            font-size: 14px; /* Taille de police légèrement plus petite */
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-top: 20px;
+            border-radius: 8px;
+        }
+        .search-bar {
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+        }
+        .search-bar input[type="text"] {
+            width: 90%; /* Ajustement pour une largeur plus large */
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+        }
+        .search-bar button {
+            padding: 10px 20px;
+            border: 1px solid #ddd;
+            background: #333;
+            color: #fff;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+        .search-bar button:hover {
+            background: #555;
+        }
+        .add-image {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: #333;
+            color: #fff;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+        .add-image:hover {
+            background: #555;
+        }
+    </style>
 </head>
 <body>
-    <a href="{% url 'upload_image' %}">Ajouter une image</a>
-    <h1>Image List</h1>
-    <ul>
-        {% if no_images %}
-            <p>Pas d'images ajoutées.</p>
-        {% else %}
-            {% for image in images %}
-                <li>
-                    <p>Original Name: {{ image.original_name }}</p>
-                    <p>Generated Name: {{ image.generated_name }}</p>
-                    <p>Tags: {% for tag in image.tags.all %}{{ tag.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
-                    <img src="{{ image.image_url}}" alt="{{ image.original_name }}">
-                </li>
-            {% endfor %}
-        {% endif %}
-    </ul>
+    <header>
+        <h1>Image List</h1>
+    </header>
+    <div class="container">
+        <a href="{% url 'upload_image' %}" class="add-image">Ajouter une image</a>
+        
+        <div class="search-bar">
+            <form method="GET" action="{% url 'image_list' %}">
+                <input type="text" name="q" placeholder="Rechercher par nom original..." value="{{ request.GET.q }}">
+                <button type="submit">Rechercher</button>
+            </form>
+        </div>
+        
+        <ul>
+            {% if no_images %}
+                <p>Pas d'images ajoutées.</p>
+            {% else %}
+                {% for image in images %}
+                    <li>
+                        <p><strong>Nom Original:</strong> {{ image.original_name }}</p>
+                        <p><strong>Nom Généré:</strong> {{ image.generated_name }}</p>
+                        <p><strong>Tags:</strong> {% for tag in image.tags.all %}{{ tag.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+                        <img src="{{ image.image_url }}" alt="{{ image.original_name }}">
+                    </li>
+                {% endfor %}
+            {% endif %}
+        </ul>
+    </div>
 </body>
 </html>

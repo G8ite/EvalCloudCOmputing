@@ -35,6 +35,11 @@ def upload_image(request):
 def image_list(request):
     images = Image.objects.all()
 
+    # Filtrage par nom original
+    query = request.GET.get('q')
+    if query:
+        images = images.filter(original_name__icontains=query)
+
     for image in images:
         file_path = image.generated_name
         image_url = default_storage.url(file_path)
@@ -46,27 +51,3 @@ def image_list(request):
         context['no_images'] = True
 
     return render(request, 'images/image_list.html', context)
-
-
-def describe_image(image_url, subscription_key, endpoint):
-    headers = {
-        'Content-Type': 'application/json',
-        'Ocp-Apim-Subscription-Key': subscription_key,
-    }
-
-    params = {
-        'visualFeatures': 'Description',
-        'language': 'en',
-    }
-
-    data = {'url': image_url}
-
-    try:
-        response = requests.post(endpoint, headers=headers, params=params, json=data)
-        response.raise_for_status()
-        analysis = response.json()
-        description = analysis['description']['captions'][0]['text']
-        return description
-    except Exception as e:
-        print(f"Error: {e}")
-        return None
