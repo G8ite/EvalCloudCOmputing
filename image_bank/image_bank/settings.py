@@ -54,6 +54,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'images.middleware.DynamicAllowedHostsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'image_bank.urls'
@@ -135,9 +137,9 @@ STATIC_URL = "https://pimenteldeandradestock.blob.core.windows.net/imageblob/"
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 ALLOWED_HOSTS = [
     os.environ.get("URL_SERVER_NAME"),
-    "localhost"
+    "localhost",
+    "*"
 ]
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
